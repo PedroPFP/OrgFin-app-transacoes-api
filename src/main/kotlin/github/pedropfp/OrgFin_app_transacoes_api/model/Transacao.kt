@@ -36,7 +36,7 @@ class Transacao() {
     var data: LocalDate = LocalDate.now()
 
     @get:DynamoDbAttribute("nm_transacao")
-    lateinit var titulo: String
+    lateinit var nome: String
 
     @get:DynamoDbAttribute("desc_transacao")
     var descricao: String? = null
@@ -50,7 +50,7 @@ class Transacao() {
             this.idUsuario,
             this.tipo,
             this.valor,
-            this.titulo,
+            this.nome,
             this.descricao,
             this.tagGenero
         )
