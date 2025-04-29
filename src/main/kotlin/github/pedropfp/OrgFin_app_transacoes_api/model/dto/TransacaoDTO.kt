@@ -9,7 +9,7 @@ data class TransacaoDTO(
     val idUsuario: UUID,
     val tipo: TipoTransacao,
     val valor: Double,
-    val titulo: String,
+    val nome: String,
     val descricao: String?,
     val tagGenero: String?
 ){
@@ -18,7 +18,7 @@ data class TransacaoDTO(
         transacao.tipo = this.tipo
         transacao.idUsuario = this.idUsuario
         transacao.valor = this.valor
-        transacao.titulo = this.titulo
+        transacao.nome = this.nome
         transacao.descricao = this.descricao
         transacao.tagGenero = this.tagGenero
         return transacao
