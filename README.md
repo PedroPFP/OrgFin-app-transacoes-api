@@ -39,24 +39,24 @@ Repositório de aplicação react - Não iniciado
 
 ## Infra
 
-- [x] Criação de infra cloudfront para dynamoDb
-- [x] Criação de infra cloudfront para ECR
-- [x] Criação de infra cloudfront para cognito user-pool
+- [x] ~~Criação de infra cloudfront para dynamoDb~~
+- [x] ~~Criação de infra cloudfront para ECR~~
+- [x] ~~Criação de infra cloudfront para cognito user-pool~~
 - [ ] Criação de infra cloudfront para ECS
   - [ ] Criação de infra para load balancer
   - [ ] Criação de infra para ASG
-  - [x] Contratação de instância reservada
+  - [x] ~~Contratação de instância reservada~~
 - [ ] Criação de infra cloudfront para Api-gateway
 
 ## Api transações
 
-- [x] Integração com dynamoDb
-  - [x] Leitura de dados
-  - [x] Escrita de dados
+- [x] ~~Integração com dynamoDb~~
+  - [x] ~~Leitura de dados~~
+  - [x] ~~Escrita de dados~~
 - [ ] Integração com cognito user pool
   - [ ] Validação de usuário existente na user-pool
-- [x] Crud
-- [x] Implementação de campos de negócio 
+- [x] ~~Crud~~
+- [x] ~~Implementação de campos de negócio~~ 
 - [ ] Implementação de campos lógicos
 - [ ] Validações usando Bean validation
 - [ ] Criação de logs
