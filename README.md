@@ -17,6 +17,10 @@ Repositório de infra(cloudfront) - [OrgFin-infra](https://github.com/PedroPFP/O
 
 Repositório de aplicação REST    - [OrgFin-app-transacoesApi](https://github.com/PedroPFP/OrgFin-app-transacoes-api)
 
+Repositório de aplicação Flutter - Não iniciado 
+
+Repositório de aplicação react - Não iniciado
+
 # Arquitetura
 
 - O armazenamento de dados é realizado no dynamoDb, um banco de dados não relacional de propriedade da aws.
@@ -31,9 +35,81 @@ Repositório de aplicação REST    - [OrgFin-app-transacoesApi](https://github.
 
 ![alt text](http://orgfinimages.s3.sa-east-1.amazonaws.com/Arquitetura.png)
 
-# Próximas features
+# Features planejadas
+
+## Infra
+
+- [x] Criação de infra cloudfront para dynamoDb
+- [x] Criação de infra cloudfront para ECR
+- [x] Criação de infra cloudfront para cognito user-pool
+- [ ] Criação de infra cloudfront para ECS
+  - [ ] Criação de infra para load balancer
+  - [ ] Criação de infra para ASG
+  - [x] Contratação de instância reservada
+- [ ] Criação de infra cloudfront para Api-gateway
+
+## Api transações
+
+- [x] Integração com dynamoDb
+  - [x] Leitura de dados
+  - [x] Escrita de dados
+- [ ] Integração com cognito user pool
+  - [ ] Validação de usuário existente na user-pool
+- [x] Crud
+- [x] Implementação de campos de negócio 
+- [ ] Implementação de campos lógicos
+- [ ] Validações usando Bean validation
+- [ ] Criação de logs
+
+## App mobile flutter
+
+- [ ] Integração com aws Amplify
+- [ ] Tela de login com aws Amplify
+- [ ] Tela de resumo financeiro
+- [ ] Tela de cadastro de transações
+- [ ] Tela de alteração de transação
+- [ ] Tela de visualização de transações
+- [ ] Integração com S3
+  - [ ] Salvar imagem relacionada a transação
 
 
+## App desktop React
+
+- [ ] Integração com aws Amplify
+- [ ] Tela de login com aws Amplify
+- [ ] Tela de resumo financeiro
+- [ ] Tela de cadastro de transações
+- [ ] Tela de alteração de transação
+- [ ] Tela de visualização de transações
+- [ ] Integração com S3
+    - [ ] Salvar imagem relacionada a transação
+
+# Campos de negócio
+
+| Informação             | Nome do campo no banco de dados | Tipo    | Exemplos        |
+|------------------------|---------------------------------|---------|-----------------|
+| **Tipo da transação**  | tp_transacao                    | Enum    | DESPESA,RECEITA |
+| Data da transação      | dt_transacao                    | LocalDate | 15-09-2024 20:35
+| **Valor da transação** | vl_transacao                    | Double  | 250.32
+| **Nome da transação**  | nm_transacao                    | String | Remédios para gripe
+| Descrição da transação | desc_transacao                   | String | Remédios para gripe receitados por doutor fulano    
+| Tag da transação       | tag_transacao | String | Saúde
+
+Campos em **negrito** são obrigatórios.
+
+# Campos lógicos
+
+
+| Informação                     | Nome do campo no banco de dados | Tipo      | Exemplos        |
+|--------------------------------|---------------------------------|-----------|-----------------|
+| **Id transação**               | id_transacao                    | UUID      | 71d987a5-29f0-4ffc-bbbb-814f95fa73da |
+| **Id usuário**                 | id_usuario                      | UUID      | 4925adf5-c1aa-4f83-8c7b-12a3163a5d7e
+| **_Data de criação_**          | dt_criacao                      | LocalDate | 14-09-2024 14:30
+| **Data de última atualização** | dt_ultima_atualizacao           | LocalDate | 15-09-2024 18:50
+
+Campos em **negrito** são obrigatórios.
+
+Campos em _italico_ são imutáveis
 
 # Recursos
 
@@ -66,8 +142,9 @@ Repositório de aplicação REST    - [OrgFin-app-transacoesApi](https://github.
                 "tipo": "string",
                 "data": "date",
                 "valor": "number",
-                "titulo: "string", 
-                "descricao": "string"
+                "nome: "string", 
+                "descricao": "string",
+                "tag": "string"
             }
         ]
     }
@@ -109,8 +186,9 @@ Repositório de aplicação REST    - [OrgFin-app-transacoesApi](https://github.
         "tipo": "string",
         "data": "date",
         "valor": "number",
-        "titulo: "string", 
-        "descricao": "string"
+        "nome: "string", 
+        "descricao": "string",
+        "tag": "string"
     }
 
     2. Erro de validação
@@ -145,8 +223,9 @@ Repositório de aplicação REST    - [OrgFin-app-transacoesApi](https://github.
         "tipo": "string",
         "data": "date",
         "valor": "number",
-        "titulo: "string", 
-        "descricao": "string"
+        "nome: "string", 
+        "descricao": "string",
+        "tag": "string"
     }
 
     - Resposta
@@ -177,8 +256,9 @@ Repositório de aplicação REST    - [OrgFin-app-transacoesApi](https://github.
             "tipo": "string",
             "data": "date",
             "valor": "number",
-            "titulo: "string", 
-            "descricao": "string"
+            "nome: "string", 
+            "descricao": "string",
+            "tag": "string"
         }
         
         - Resposta
