@@ -5,6 +5,7 @@ import github.pedropfp.OrgFin_app_transacoes_api.model.dto.TransacaoDTO
 import github.pedropfp.OrgFin_app_transacoes_api.model.erro.ErroCampo
 import github.pedropfp.OrgFin_app_transacoes_api.model.erro.ErroResposta
 import github.pedropfp.OrgFin_app_transacoes_api.service.TransacaoService
+import jakarta.validation.Valid
 import lombok.AllArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -30,7 +31,7 @@ class TransacaoController {
     lateinit var transacaoService: TransacaoService
 
     @PostMapping
-    fun salvarTransacao(@RequestBody transacaoDto: TransacaoDTO): ResponseEntity<Void> {
+    fun salvarTransacao(@RequestBody @Valid transacaoDto: TransacaoDTO): ResponseEntity<Void> {
 
         val transacao: Transacao = transacaoDto.mapToTransacao()
         val result = transacaoService.salvar(transacao)
@@ -112,7 +113,7 @@ class TransacaoController {
     }
 
     @PutMapping("/{id}")
-    fun alterarTransacao(@RequestBody transacaoDto: TransacaoDTO, @PathVariable("id") id: UUID): ResponseEntity<out Any> {
+    fun alterarTransacao(@RequestBody @Valid transacaoDto: TransacaoDTO, @PathVariable("id") id: UUID): ResponseEntity<out Any> {
 
         var transacao = transacaoDto.mapToTransacao()
         transacao.idTransacao = id
