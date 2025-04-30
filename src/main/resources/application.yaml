@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: "OrgFin-app-transacoes-api"
+  cloud:
+    aws:
+      endpoint: "https://dynamodb.sa-east-1.amazonaws.com"
+      credentials:
+        access-key: ${AWS_ACCESSKEY}
+        secret-key: ${AWS_SECRETKEY}
+      regions:
+        static: "sa-east-1"
+      dynamodb:
+        table-prefix: "tb_"
+        table-sufix:
