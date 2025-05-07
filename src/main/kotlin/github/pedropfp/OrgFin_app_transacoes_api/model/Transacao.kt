@@ -44,17 +44,17 @@ class Transacao() {
     @get:DynamoDbAttribute("tag_genero_transacao")
     var tagGenero: String? = null
 
-    fun mapearParaDto(): TransacaoDTO {
-        var dto = TransacaoDTO(
-            this.idTransacao,
-            this.idUsuario,
-            this.tipo,
-            this.valor,
-            this.nome,
-            this.descricao,
-            this.tagGenero
-        )
-        return dto
-    }
+//    fun mapearParaDto(): TransacaoDTO {
+//        var dto = TransacaoDTO(
+//            this.idTransacao,
+//            this.idUsuario,
+//            this.tipo,
+//            this.valor,
+//            this.nome,
+//            this.descricao,
+//            this.tagGenero
+//        )
+//        return dto
+//    }
 
 }

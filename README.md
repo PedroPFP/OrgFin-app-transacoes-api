@@ -58,8 +58,11 @@ Repositório de aplicação react - Não iniciado
 - [x] ~~Crud~~
 - [x] ~~Implementação de campos de negócio~~ 
 - [ ] Implementação de campos lógicos
-- [ ] Validações usando Bean validation
+- [X] ~~Validações usando Bean validation~~
 - [ ] Criação de logs
+- [ ] Implementação de securiy
+- [ ] Implementação de ambientes de desenvolvimento
+- [ ] Integração com aws STS para autenticação
 
 ## App mobile flutter
 

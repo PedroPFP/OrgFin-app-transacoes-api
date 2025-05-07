@@ -4,9 +4,11 @@ import github.pedropfp.OrgFin_app_transacoes_api.model.Transacao
 import github.pedropfp.OrgFin_app_transacoes_api.model.dto.TransacaoDTO
 import github.pedropfp.OrgFin_app_transacoes_api.model.erro.ErroCampo
 import github.pedropfp.OrgFin_app_transacoes_api.model.erro.ErroResposta
+import github.pedropfp.OrgFin_app_transacoes_api.model.mapper.TransacaoMapper
 import github.pedropfp.OrgFin_app_transacoes_api.service.TransacaoService
 import jakarta.validation.Valid
 import lombok.AllArgsConstructor
+import org.mapstruct.factory.Mappers
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -30,10 +32,12 @@ class TransacaoController {
     @Autowired
     lateinit var transacaoService: TransacaoService
 
+    private var transacaoMapper: TransacaoMapper = Mappers.getMapper(TransacaoMapper::class.java)
+
     @PostMapping
     fun salvarTransacao(@RequestBody @Valid transacaoDto: TransacaoDTO): ResponseEntity<Void> {
 
-        val transacao: Transacao = transacaoDto.mapToTransacao()
+        val transacao: Transacao = transacaoMapper.TransacaoDTOToTransacao(transacaoDto)
         val result = transacaoService.salvar(transacao)
 
         val uri: URI =
@@ -64,7 +68,7 @@ class TransacaoController {
             if (casoNotFound!=null)
                 return ResponseEntity.status(casoNotFound!!.status).body(casoNotFound)
 
-        var response = result?.mapearParaDto()
+        var response = transacaoMapper.TransacaoToTransacaoDTO(result!!)
         return ResponseEntity.ok(response)
 
     }
@@ -85,7 +89,7 @@ class TransacaoController {
             return ResponseEntity.status(casoNotFound!!.status).body(casoNotFound)
 
         result.forEach { it ->
-            dtos.add(it!!.mapearParaDto())
+            dtos.add(transacaoMapper.TransacaoToTransacaoDTO(it!!))
         }
         return ResponseEntity.ok(dtos)
     }
@@ -115,7 +119,7 @@ class TransacaoController {
     @PutMapping("/{id}")
     fun alterarTransacao(@RequestBody @Valid transacaoDto: TransacaoDTO, @PathVariable("id") id: UUID): ResponseEntity<out Any> {
 
-        var transacao = transacaoDto.mapToTransacao()
+        var transacao = transacaoMapper.TransacaoDTOToTransacao(transacaoDto)
         transacao.idTransacao = id
 
         var transacaoCadastrada =
