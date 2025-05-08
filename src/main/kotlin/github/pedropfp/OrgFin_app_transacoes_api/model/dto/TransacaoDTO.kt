@@ -22,15 +22,4 @@ data class TransacaoDTO(
     val nome: String,
     val descricao: String?,
     val tagGenero: String?
-){
-//    fun mapToTransacao(): Transacao {
-//        var transacao: Transacao = Transacao()
-//        transacao.tipo = this.tipo
-//        transacao.idUsuario = this.idUsuario
-//        transacao.valor = this.valor
-//        transacao.nome = this.nome
-//        transacao.descricao = this.descricao
-//        transacao.tagGenero = this.tagGenero
-//        return transacao
-//    }
-}
+)
