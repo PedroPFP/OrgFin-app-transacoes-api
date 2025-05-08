@@ -4,9 +4,9 @@ import github.pedropfp.OrgFin_app_transacoes_api.model.Transacao
 import github.pedropfp.OrgFin_app_transacoes_api.model.dto.TransacaoDTO
 import github.pedropfp.OrgFin_app_transacoes_api.model.erro.ErroCampo
 import github.pedropfp.OrgFin_app_transacoes_api.model.erro.ErroResposta
+import github.pedropfp.OrgFin_app_transacoes_api.model.mapper.TransacaoMapper
 import github.pedropfp.OrgFin_app_transacoes_api.service.TransacaoService
 import jakarta.validation.Valid
-import lombok.AllArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -20,20 +20,22 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.net.URI
 import java.util.UUID
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 @RestController
 @RequestMapping("v1/transacao")
-@AllArgsConstructor
 class TransacaoController {
 
     @Autowired
     lateinit var transacaoService: TransacaoService
 
+    @Autowired
+    lateinit var transacaoMapper: TransacaoMapper
+
     @PostMapping
     fun salvarTransacao(@RequestBody @Valid transacaoDto: TransacaoDTO): ResponseEntity<Void> {
 
-        val transacao: Transacao = transacaoDto.mapToTransacao()
+        val transacao: Transacao = transacaoMapper.transacaoDTOToTransacao(transacaoDto)
+        transacao.idTransacao = UUID.randomUUID()
         val result = transacaoService.salvar(transacao)
 
         val uri: URI =
@@ -64,7 +66,7 @@ class TransacaoController {
             if (casoNotFound!=null)
                 return ResponseEntity.status(casoNotFound!!.status).body(casoNotFound)
 
-        var response = result?.mapearParaDto()
+        var response = transacaoMapper.transacaoToTransacaoDTO(result!!)
         return ResponseEntity.ok(response)
 
     }
@@ -85,7 +87,7 @@ class TransacaoController {
             return ResponseEntity.status(casoNotFound!!.status).body(casoNotFound)
 
         result.forEach { it ->
-            dtos.add(it!!.mapearParaDto())
+            dtos.add(transacaoMapper.transacaoToTransacaoDTO(it!!))
         }
         return ResponseEntity.ok(dtos)
     }
@@ -115,11 +117,11 @@ class TransacaoController {
     @PutMapping("/{id}")
     fun alterarTransacao(@RequestBody @Valid transacaoDto: TransacaoDTO, @PathVariable("id") id: UUID): ResponseEntity<out Any> {
 
-        var transacao = transacaoDto.mapToTransacao()
+        var transacao = transacaoMapper.transacaoDTOToTransacao(transacaoDto)
         transacao.idTransacao = id
 
         var transacaoCadastrada =
-            transacaoService.buscarPorIdTransacaoEIdUsuario(transacao.idTransacao, transacao.idUsuario)
+            transacaoService.buscarPorIdTransacaoEIdUsuario(transacao.idTransacao!!, transacao.idUsuario)
 
         var casoNotFound = verificarSeFoiEncontradoERetornarNotFound(
             transacaoCadastrada,
