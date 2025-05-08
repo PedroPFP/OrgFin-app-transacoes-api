@@ -20,14 +20,14 @@ class TransacaoService {
         return dynamoDbTemplate.save(transacao)
     }
 
-    fun buscarPorIdTransacaoEIdUsuario(idTransacao:UUID, idUsuario:UUID): Transacao? {
+    fun buscarPorIdTransacaoEIdUsuario(idTransacao:UUID, idUsuario:String): Transacao? {
         return dynamoDbTemplate.load(
             Key.builder().partitionValue(idTransacao.toString()).sortValue(idUsuario.toString())
                 .build(), Transacao().javaClass
         )
     }
 
-    fun buscarTransacoesPorUsuario(idUsuario: UUID): List<Transacao?> {
+    fun buscarTransacoesPorUsuario(idUsuario: String): List<Transacao?> {
         var expression: Expression =
             Expression.builder().expression("#idUsuario = :idUsuario")
                 .putExpressionName("#idUsuario","id_usuario")
@@ -41,7 +41,7 @@ class TransacaoService {
         return transacoes
     }
 
-    fun deletarTransacaoPorIdTransacaoEIdUsuario(idTransacao:UUID, idUsuario:UUID): Transacao? {
+    fun deletarTransacaoPorIdTransacaoEIdUsuario(idTransacao:UUID, idUsuario:String): Transacao? {
         return dynamoDbTemplate.delete(
             Key.builder().partitionValue(idTransacao.toString()).sortValue(idUsuario.toString())
                 .build(), Transacao().javaClass

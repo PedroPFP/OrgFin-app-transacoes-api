@@ -12,3 +12,5 @@ spring:
       dynamodb:
         table-prefix: "tb_"
         table-sufix:
+      cognito:
+        user-pool-id: "sa-east-1_v4yhpN41u"
