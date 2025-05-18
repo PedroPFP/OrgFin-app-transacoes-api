@@ -31,6 +31,7 @@ Repositório de aplicação react - Não iniciado
 - O cadastro de transações é realizado em um app flutter, e em uma aplicação web react
 - A planilha irá realizar a requisição de todas as transações e transformar em um csv
 
+Para maiores detalhes técnicos da arquitetura, favor ir até o tópico [Características da arquitetura](#características-da-arquitetura)
 
 
 ![alt text](http://orgfinimages.s3.sa-east-1.amazonaws.com/Arquitetura.png)
@@ -58,8 +59,11 @@ Repositório de aplicação react - Não iniciado
 - [x] ~~Crud~~
 - [x] ~~Implementação de campos de negócio~~ 
 - [ ] Implementação de campos lógicos
-- [ ] Validações usando Bean validation
+- [X] ~~Validações usando Bean validation~~
 - [ ] Criação de logs
+- [ ] Implementação de securiy
+- [ ] Implementação de ambientes de desenvolvimento
+- [ ] Integração com aws STS para autenticação
 
 ## App mobile flutter
 
@@ -315,3 +319,191 @@ Campos em _italico_ são imutáveis
                 {"field": "idUsuario", "error": "Id do usuário deve existir na base de dados."}
             ]
         }
+
+
+# Características da arquitetura
+
+## Operacionais
+
+### Disponibilidade
+
+Visto que o software não fará um processamento de uma grande quantidade de dados, e que ele deve estar disponível 
+para que o usuário consiga fazer os cadastros das transações, a necessidade é que ele esteja disponível das 6:00 as 22:00.
+O período de 22:00 - 6:00 pode ser usado para atualizações e manutenções. 
+
+### Continuidade
+
+Temos um ecs que caso uma task falha, ele irá gerar outra automaticamente. Em caso de desastre em uma AZ, iremos lançar 
+uma nova instância em outra AZ disponível.
+
+### Desempenho
+
+  Testes a serem realizados:
+  - [ ] Teste de estresse.
+  - [ ] Teste de tempo de resposta.
+  - [ ] Teste de capacidade.
+
+### Recuperabilidade
+
+Por conta da natureza simples do software, e na primeira versão ser um simples CRUD de transações. Não temos necessidade
+de um período extremamente curto para recuperar as capacidades.
+
+### Confiabilidade
+
+Teste de estresse pendente.
+
+### Robustez
+
+  Por ser um software inteiramente em cloud, com exceção do aplicativo mobile, em caso de falha física a responsabilidadade
+será da AWS para gerir e providenciar o hardware necessário. Em caso de falha de containers ou instâncias haverá retrys,
+e caso isso não funcione as task irão subir com uma versão anterior para remediar e diminuir o downtime da aplicação.
+
+### Escalabilidade
+  
+  Caso necessário o ASG irá gerar uma segunda instância t2.micro, por ser um software com poucos usuários será realizado
+  um estudo para entender o motivo do pico de processamento.
+
+## Estruturais
+
+### Configuração
+
+### Extensão
+
+### Instabilidade
+
+### Reusabilidade
+
+### Localização
+
+### Manutenção
+
+### Portabilidade
+
+### Suporte
+
+### Atualização
+
+## Transversais
+
+### Acessibilidade
+
+### Armazenamento
+
+### Instabilidade
+
+### Autenticação
+
+### Autorização
+
+### Legalidade
+
+### Privacidade
+
+### Segurança
+
+### Viabilidade
+
+# Modularidade
+
+## Coesão
+
+  Coesão se refere até que ponto as partes de um módulo devem estar contidas no mesmo módulo, uma coesão alta significa
+que poderiamos dividir a classe em mais de uma.
+
+### Fórmula do LCOM96b
+
+LCOM = 1 - ( (|A₁| / a + |A₂| / a + ... + |Aₘ| / a) / m )
+
+![img.png](img.png)
+
+#### Onde:
+
+- **m**: número de métodos da classe (excluindo getters/setters triviais)
+- **a**: número de atributos (fields) da classe
+- **|Aᵢ|**: número de atributos usados pelo método *i*
+
+> **Nota:** Se não houver atributos (`a = 0`) ou métodos (`m = 0`), o valor de **LCOM96b** é definido como **0**.
+
+
+    github.pedropfp.OrgFin_app_transacoes_api
+      OrgFinAppTransacoesApiApplication.java NA
+    
+      config
+        CustomTableNameResolver.java | m=1, a=2, a1 = 2 | = 0
+    
+      controller
+        TransacaoController.java | m=5, a=2, a1 = 1 a2...a5 = 2 | = 0.1 (Métodos privados não são adicionados na conta )
+    
+        common
+          GlobalExceptionHandler.java | m=1, a=0, ... | = 0 ( Desconsiderado por não ter atributos de classe)
+    
+      model
+        TipoTransacao.java | m=0, a=1, ... | = 0 ( Desconsiderado por não ter métodos de classe)
+        Transacao.java | m=0, a=7, ... | = 0 ( Desconsiderado por não ter métodos de classe)
+    
+        dto
+          TransacaoDTO.java | m=0, a=7, ... | = 0 ( Desconsiderado por não ter métodos de classe)
+    
+        erro
+          ErroCampo.java | m=0, a=2, ... | = 0 ( Desconsiderado por não ter métodos de classe)
+          ErroResposta.java | m=0, a=3, ... | = 0 ( Desconsiderado por não ter métodos de classe, apenas estáticos)
+    
+        mapper
+          TransacaoMapper.java NA
+    
+      service
+        TransacaoService.java | m=5, a=1, a1...a5=1 | = 0 
+
+
+## Acoplamento
+
+### 1. Abstração (A)
+
+A fórmula da abstração mede o quanto um pacote é abstrato (composto por classes abstratas ou interfaces):
+
+**A = Na / Nc**
+
+Onde:
+- **Na**: número de classes abstratas (ou interfaces) no pacote
+- **Nc**: número total de classes (abstratas + concretas) no pacote
+
+---
+
+### 2. Instabilidade (I)
+
+A instabilidade mede o quanto um pacote depende de outros pacotes:
+
+**I = Ce / (Ca + Ce)**
+
+Onde:
+- **Ce**: Eferente (Efferent Coupling) = número de pacotes dos quais este pacote depende
+- **Ca**: Aferente (Afferent Coupling) = número de pacotes que dependem deste pacote
+
+---
+
+### 3. Distância da Reta Principal (D)
+
+A distância da reta principal mede o quão distante o pacote está da zona ideal de equilíbrio entre abstração e estabilidade:
+
+**D = |A + I - 1|**
+
+Onde:
+- **A**: Abstração
+- **I**: Instabilidade
+- **D**: Distância da idealidade (reta principal)
+
+---
+
+    github.pedropfp.OrgFin_app_transacoes_api
+      config 
+        A = 0, I = 1/4+1 = 0.8 D = 0.2
+      controller
+        A = 0, I = 1, D = 0
+      model
+        A = 0.33, I = 0.71 D = 0,04
+      service
+        A = 0, I = 0.83, D = 0.17
+
+## Conascência
+
+
