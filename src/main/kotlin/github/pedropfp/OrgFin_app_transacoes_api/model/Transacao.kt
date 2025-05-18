@@ -17,7 +17,7 @@ class Transacao() {
 
     @get:DynamoDbAttribute("id_usuario")
     @get:DynamoDbSortKey
-    lateinit var idUsuario: UUID;
+    lateinit var idUsuario: String;
 
     @get:DynamoDbAttribute("tp_transacao")
     lateinit var tipo: TipoTransacao;

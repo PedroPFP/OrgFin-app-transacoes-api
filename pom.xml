@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>github.pedropfp</groupId>
 	<artifactId>OrgFin-app-transacoes-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.3.0</version>
 	<name>OrgFin-app-transacoes-api</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Api de transações para o projeto OrgFin</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -63,7 +63,19 @@
 		</dependency>
 		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>cognitoidentityprovider</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>cognitoidentity</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>dynamodb</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.awspring.cloud</groupId>

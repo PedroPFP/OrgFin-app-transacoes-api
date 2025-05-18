@@ -12,3 +12,8 @@ spring:
       dynamodb:
         table-prefix: "tb_"
         table-sufix:
+      cognito:
+        user-pool-id: "sa-east-1_v4yhpN41u"
+server:
+  address: "0.0.0.0"
+  port: "8080"
