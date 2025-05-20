@@ -43,27 +43,29 @@ Para maiores detalhes técnicos da arquitetura, favor ir até o tópico [Caracte
 - [x] ~~Criação de infra cloudfront para dynamoDb~~
 - [x] ~~Criação de infra cloudfront para ECR~~
 - [x] ~~Criação de infra cloudfront para cognito user-pool~~
-- [ ] Criação de infra cloudfront para ECS
-  - [ ] Criação de infra para load balancer
-  - [ ] Criação de infra para ASG
+- [x] ~~Criação de infra cloudfront para ECS~~
+  - [x] ~~Criação de infra para load balancer~~
+  - [x] ~~Criação de infra para ASG~~
   - [x] ~~Contratação de instância reservada~~
-- [ ] Criação de infra cloudfront para Api-gateway
+- [x] ~~Criação de infra cloudfront para Api-gateway~~
+- [ ] Criação de infra para cloudwatch logs
 
 ## Api transações
 
 - [x] ~~Integração com dynamoDb~~
   - [x] ~~Leitura de dados~~
   - [x] ~~Escrita de dados~~
-- [ ] Integração com cognito user pool
-  - [ ] Validação de usuário existente na user-pool
+- [ ] ~~Integração com cognito user pool~~ (Remapeado)
+  - [ ] ~~Validação de usuário existente na user-pool~~ (Remapeado)
 - [x] ~~Crud~~
 - [x] ~~Implementação de campos de negócio~~ 
-- [ ] Implementação de campos lógicos
+- [x] Implementação de campos lógicos
 - [X] ~~Validações usando Bean validation~~
 - [ ] Criação de logs
-- [ ] Implementação de securiy
-- [ ] Implementação de ambientes de desenvolvimento
-- [ ] Integração com aws STS para autenticação
+- [x] Implementação de securiy
+- [ ] Implementação de profiles
+- [x] Integração com aws STS para autenticação
+- [ ] Limitador de usuários/transações de convidados.
 
 ## App mobile flutter
 
@@ -106,8 +108,8 @@ Campos em **negrito** são obrigatórios.
 
 | Informação                     | Nome do campo no banco de dados | Tipo      | Exemplos        |
 |--------------------------------|---------------------------------|-----------|-----------------|
-| **Id transação**               | id_transacao                    | UUID      | 71d987a5-29f0-4ffc-bbbb-814f95fa73da |
-| **Id usuário**                 | id_usuario                      | UUID      | 4925adf5-c1aa-4f83-8c7b-12a3163a5d7e
+| **_Id transação_**             | id_transacao                    | UUID      | 71d987a5-29f0-4ffc-bbbb-814f95fa73da |
+| **_Id usuário_**               | id_usuario                      | UUID      | 4925adf5-c1aa-4f83-8c7b-12a3163a5d7e
 | **_Data de criação_**          | dt_criacao                      | LocalDate | 14-09-2024 14:30
 | **Data de última atualização** | dt_ultima_atualizacao           | LocalDate | 15-09-2024 18:50
 
@@ -117,21 +119,61 @@ Campos em _italico_ são imutáveis
 
 # Recursos
 
-| Operação                                                       | Request                          | Códigos sucesso | Códigos de erro |
-|----------------------------------------------------------------|----------------------------------| ---------- | --------------- |
-| [Listar transações do usuário](#listar-transações-do-usuário ) | GET /transacoes/{idUsuario}      | 200 | 422                                                                                                                                                                                                 
-| [Buscar transação](#buscar-transação)                          | GET /transacoes/{id}/{idUsuario} | 200 | 422 
-| [Adicionar transação](#adicionar-transação)                    | POST /transacoes                 | 201 | 400, 422  
-| [Alterar transação](#alterar-transação)                        | PUT /transacoes/{id}             | 204 | 400, 422
-| [Remover transação](#remover-transação)                        | DELETE /transacoes/{id}          | 204 | 400
+| Operação                                                       | Request              | Códigos sucesso | Códigos de erro |
+|----------------------------------------------------------------|----------------------| ---------- | --------------- |
+| [Listar transações do usuário](#listar-transações-do-usuário ) | GET /transacoes      | 200 | 422                                                                                                                                                                                                 
+| [Buscar transação](#buscar-transação)                          | GET /transacoes/{id} | 200 | 422 
+| [Adicionar transação](#adicionar-transação)                    | POST /transacoes     | 201 | 400, 422  
+| [Alterar transação](#alterar-transação)                        | PUT /transacoes/{id} | 204 | 400, 422
+| [Remover transação](#remover-transação)                        | DELETE /transacoes/{id} | 204 | 400
 
 
 # Contrato API
 
+## Autenticação
+O cliente da aplicação deve ter um token autorizado pelo AWS cognito. 
+As únicas aplicações que irão gerar este token são a aplicação Web e mobile.
+
+
+    - Rotas que necessitam de autenticação
+    GET /transacoes
+    GET /transacoes/{id}
+    POST /transacoes
+    PUT /transacoes/{id}
+    DELETE /transacoes/{id}
+    
+    - Rotas que não necessitam de autenticação
+    GET /actuator/health (Rota utilizada somente para verificação de 
+    health check dos containers.)
+
+    headers obrigatórios:
+    Authorization
+
+    Exemplo:
+    header.Authorization: Bearer <token jwt>
+
+    - Resposta
+    1. Falha
+
+    Código: 401 - Unauthorized
+    Response:
+    {
+	  "status": 401,
+	  "mensagem": "Token de acesso inválido.",
+	  "erros": 
+      [
+        {
+          "campo": "header.Authorization",
+          "erro": "Full authentication is required to access this resource"
+        }
+	  ]
+    }
+
+
 ### Listar transações do usuário
 
     - Requisição
-    URI: /transacoes/{idUsuario}
+    URI: /transacoes
     Método: GET
 
     - Resposta
@@ -142,7 +184,7 @@ Campos em _italico_ são imutáveis
     {
         [
             {
-                "idUsuario": "string",
+                "idTransacao": "string",
                 "tipo": "string",
                 "data": "date",
                 "valor": "number",
@@ -163,21 +205,11 @@ Campos em _italico_ são imutáveis
         "errors": []
     }
 
-    Código: 422 - Unprocessable Entity
-    Body: 
-    {
-        "status": 422,
-        "message" "Erro de validação",
-        "errors": [
-            {"field": "idUsuario", "error": "Id do usuário deve existir na base de dados."}
-        ]
-    }
-
 
 ### Buscar transação
 
     - Requisição
-    URI: /transacoes/{id}/{idUsuario}
+    URI: /transacoes/{id}
     Método: GET
 
     - Resposta
@@ -186,7 +218,7 @@ Campos em _italico_ são imutáveis
     Código: 200 - Ok
     Response:
     {
-        "idUsuario": "string",
+        "idTransacao": "string",
         "tipo": "string",
         "data": "date",
         "valor": "number",
@@ -205,16 +237,6 @@ Campos em _italico_ são imutáveis
         "errors": []
     }
 
-    Código: 422 - Unprocessable Entity
-    Body: 
-    {
-        "status": 422,
-        "message" "Erro de validação",
-        "errors": [
-            {"field": "idUsuario", "error": "Id do usuário deve existir na base de dados."}
-        ]
-    }
-
 
 ### Adicionar transação
     
@@ -223,7 +245,6 @@ Campos em _italico_ são imutáveis
     Método: POST
     Body:
     {
-        "idUsuario": "string",
         "tipo": "string",
         "data": "date",
         "valor": "number",
@@ -237,18 +258,6 @@ Campos em _italico_ são imutáveis
 
     Código: 201 - Created
 
-    2. Erro de validação
-
-    Código: 422 - Unprocessable Entity
-    Body: 
-    {
-        "status": 422,
-        "message" "Erro de validação",
-        "errors": [
-            {"field": "idUsuario", "error": "Id do usuário deve existir na base de dados."}
-        ]
-    }
-
 ### Alterar transação
 
         - Requisição
@@ -256,7 +265,6 @@ Campos em _italico_ são imutáveis
         Método: PUT
         Body:
         {
-            "idUsuario": "string",
             "tipo": "string",
             "data": "date",
             "valor": "number",
@@ -280,19 +288,9 @@ Campos em _italico_ são imutáveis
             "errors": []
         }
 
-        Código: 422 - Unprocessable Entity
-        Body: 
-        {
-            "status": 422,
-            "message" "Erro de validação",
-            "errors": [
-                {"field": "idUsuario", "error": "Id do usuário deve existir na base de dados."}
-            ]
-        }
-
 ### Remover transação
 
-        URI: /transacoes/{id}/{idUsuario}
+        URI: /transacoes/{id}
         Método: DELETE
         
         - Resposta
@@ -308,16 +306,6 @@ Campos em _italico_ são imutáveis
             "status": 404.
             "message": "Transação não encontrada",
             "errors": []
-        }
-
-        Código: 422 - Unprocessable Entity
-        Body: 
-        {
-            "status": 422,
-            "message" "Erro de validação",
-            "errors": [
-                {"field": "idUsuario", "error": "Id do usuário deve existir na base de dados."}
-            ]
         }
 
 
@@ -503,7 +491,3 @@ Onde:
         A = 0.33, I = 0.71 D = 0,04
       service
         A = 0, I = 0.83, D = 0.17
-
-## Conascência
-
-
