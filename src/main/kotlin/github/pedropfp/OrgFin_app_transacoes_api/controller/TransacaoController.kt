@@ -6,7 +6,6 @@ import github.pedropfp.OrgFin_app_transacoes_api.model.erro.ErroCampo
 import github.pedropfp.OrgFin_app_transacoes_api.model.erro.ErroResposta
 import github.pedropfp.OrgFin_app_transacoes_api.model.mapper.TransacaoMapper
 import github.pedropfp.OrgFin_app_transacoes_api.service.TransacaoService
-import github.pedropfp.OrgFin_app_transacoes_api.validator.UsuarioValidator
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -32,14 +31,8 @@ class TransacaoController {
     @Autowired
     lateinit var transacaoMapper: TransacaoMapper
 
-    @Autowired
-    lateinit var usuarioValidator: UsuarioValidator
-
     @PostMapping
     fun salvarTransacao(@RequestBody @Valid transacaoDto: TransacaoDTO): ResponseEntity<Void> {
-
-        usuarioValidator.validarUsuario(transacaoDto.idUsuario)
-
         val transacao: Transacao = transacaoMapper.transacaoDTOToTransacao(transacaoDto)
 
         transacao.idTransacao = UUID.randomUUID()
@@ -59,9 +52,6 @@ class TransacaoController {
         @PathVariable("idTransacao") idTransacao: UUID,
         @PathVariable("idUsuario") idUsuario: String
     ): ResponseEntity<out Any> {
-
-        usuarioValidator.validarUsuario(idUsuario)
-
         var result = transacaoService.buscarPorIdTransacaoEIdUsuario(idTransacao, idUsuario)
 
         var casoNotFound = verificarSeFoiEncontradoERetornarNotFound(
@@ -82,9 +72,6 @@ class TransacaoController {
 
     @GetMapping("/{id}")
     fun buscarTransacoes(@PathVariable("id") idUsuario: String): ResponseEntity<out Any> {
-
-        usuarioValidator.validarUsuario(idUsuario)
-
         var dtos = ArrayList<TransacaoDTO>()
         val result = transacaoService.buscarTransacoesPorUsuario(idUsuario);
 
@@ -109,9 +96,6 @@ class TransacaoController {
         @PathVariable("idTransacao") idTransacao: UUID,
         @PathVariable("idUsuario") idUsuario: String
     ): ResponseEntity<out Any> {
-
-        usuarioValidator.validarUsuario(idUsuario)
-
         val result = transacaoService.deletarTransacaoPorIdTransacaoEIdUsuario(idTransacao, idUsuario)
 
         var casoNotFound = verificarSeFoiEncontradoERetornarNotFound(
@@ -130,9 +114,6 @@ class TransacaoController {
 
     @PutMapping("/{id}")
     fun alterarTransacao(@RequestBody @Valid transacaoDto: TransacaoDTO, @PathVariable("id") id: UUID): ResponseEntity<out Any> {
-
-        usuarioValidator.validarUsuario(transacaoDto.idUsuario)
-
         var transacao = transacaoMapper.transacaoDTOToTransacao(transacaoDto)
         transacao.idTransacao = id
 
