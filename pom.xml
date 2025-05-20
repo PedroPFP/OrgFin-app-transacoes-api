@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>github.pedropfp</groupId>
 	<artifactId>OrgFin-app-transacoes-api</artifactId>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<name>OrgFin-app-transacoes-api</name>
 	<description>Api de transações para o projeto OrgFin</description>
 	<url/>
