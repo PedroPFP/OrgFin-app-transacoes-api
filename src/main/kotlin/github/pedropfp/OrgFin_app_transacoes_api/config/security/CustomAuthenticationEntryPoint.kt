@@ -1,5 +1,6 @@
 package github.pedropfp.OrgFin_app_transacoes_api.config.security
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import github.pedropfp.OrgFin_app_transacoes_api.model.erro.ErroCampo
 import github.pedropfp.OrgFin_app_transacoes_api.model.erro.ErroResposta
 import jakarta.servlet.http.HttpServletRequest
@@ -24,7 +25,7 @@ class CustomAuthenticationEntryPoint : AuthenticationEntryPoint {
             ErroCampo("header.Authorization", authException!!.message.toString())
         ))
 
-        response.writer.write(erroResposta.toString())
+        response.writer.write(ObjectMapper().writeValueAsString(erroResposta))
 
 
     }

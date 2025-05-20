@@ -9,6 +9,7 @@ import github.pedropfp.OrgFin_app_transacoes_api.service.TransacaoService
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.net.URI
+import java.time.LocalDate
 import java.util.UUID
 
 @RestController
@@ -35,6 +37,8 @@ class TransacaoController {
     fun salvarTransacao(@RequestBody @Valid transacaoDto: TransacaoDTO): ResponseEntity<Void> {
         val transacao: Transacao = transacaoMapper.transacaoDTOToTransacao(transacaoDto)
 
+        transacao.idUsuario = SecurityContextHolder.getContext().authentication.name
+
         transacao.idTransacao = UUID.randomUUID()
         val result = transacaoService.salvar(transacao)
 
@@ -47,43 +51,39 @@ class TransacaoController {
         return ResponseEntity.created(uri).build()
     }
 
-    @GetMapping("/{idTransacao}/{idUsuario}")
+    @GetMapping("/{idTransacao}")
     fun buscarTransacao(
-        @PathVariable("idTransacao") idTransacao: UUID,
-        @PathVariable("idUsuario") idUsuario: String
+        @PathVariable("idTransacao") idTransacao: UUID
     ): ResponseEntity<out Any> {
-        var result = transacaoService.buscarPorIdTransacaoEIdUsuario(idTransacao, idUsuario)
+        var result = transacaoService.buscarPorIdTransacaoEIdUsuario(idTransacao,SecurityContextHolder.getContext().authentication.name)
 
         var casoNotFound = verificarSeFoiEncontradoERetornarNotFound(
             result,
             listOf(
-                ErroCampo(campo = "id_transacao", erro = "Verifique se o id da transação está correto."),
-                ErroCampo(campo = "id_usuario", erro = "Verifique se o id do usuário está correto.")
+                ErroCampo(campo = "id_transacao", erro = "Verifique se o id da transação está correto.")
             ),
             "Nenhuma transação encontrada."
         )
             if (casoNotFound!=null)
-                return ResponseEntity.status(casoNotFound!!.status).body(casoNotFound)
+                return ResponseEntity.status(casoNotFound.status).body(casoNotFound)
 
         var response = transacaoMapper.transacaoToTransacaoDTO(result!!)
         return ResponseEntity.ok(response)
 
     }
 
-    @GetMapping("/{id}")
-    fun buscarTransacoes(@PathVariable("id") idUsuario: String): ResponseEntity<out Any> {
+    @GetMapping()
+    fun buscarTransacoes(): ResponseEntity<out Any> {
         var dtos = ArrayList<TransacaoDTO>()
-        val result = transacaoService.buscarTransacoesPorUsuario(idUsuario);
+        val result = transacaoService.buscarTransacoesPorUsuario(SecurityContextHolder.getContext().authentication.name);
 
         var casoNotFound = verificarSeFoiEncontradoERetornarNotFound(
             result,
-            listOf(
-                ErroCampo(campo = "id_usuario", erro="Verifique se o id do usuário está correto.")
-            ),
+            listOf(),
             "Nenhuma transação encontrada."
         )
         if (casoNotFound!=null)
-            return ResponseEntity.status(casoNotFound!!.status).body(casoNotFound)
+            return ResponseEntity.status(casoNotFound.status).body(casoNotFound)
 
         result.forEach { it ->
             dtos.add(transacaoMapper.transacaoToTransacaoDTO(it!!))
@@ -91,23 +91,21 @@ class TransacaoController {
         return ResponseEntity.ok(dtos)
     }
 
-    @DeleteMapping("/{idTransacao}/{idUsuario}")
+    @DeleteMapping("/{idTransacao}")
     fun deletarTransacao(
-        @PathVariable("idTransacao") idTransacao: UUID,
-        @PathVariable("idUsuario") idUsuario: String
+        @PathVariable("idTransacao") idTransacao: UUID
     ): ResponseEntity<out Any> {
-        val result = transacaoService.deletarTransacaoPorIdTransacaoEIdUsuario(idTransacao, idUsuario)
+        val result = transacaoService.deletarTransacaoPorIdTransacaoEIdUsuario(idTransacao,SecurityContextHolder.getContext().authentication.name)
 
         var casoNotFound = verificarSeFoiEncontradoERetornarNotFound(
             result,
             listOf(
-                ErroCampo("id_transacao", "Verifique se o id da transação está correto."),
-                ErroCampo("id_usuario", "Verifique se o id do usuário está correto.")
+                ErroCampo("id_transacao", "Verifique se o id da transação está correto.")
             ),
             "Nenhuma transação encontrada para ser deletada."
         )
         if (casoNotFound!=null)
-            return ResponseEntity.status(casoNotFound!!.status).body(casoNotFound)
+            return ResponseEntity.status(casoNotFound.status).body(casoNotFound)
 
         return ResponseEntity.noContent().build()
     }
@@ -116,6 +114,7 @@ class TransacaoController {
     fun alterarTransacao(@RequestBody @Valid transacaoDto: TransacaoDTO, @PathVariable("id") id: UUID): ResponseEntity<out Any> {
         var transacao = transacaoMapper.transacaoDTOToTransacao(transacaoDto)
         transacao.idTransacao = id
+        transacao.idUsuario = SecurityContextHolder.getContext().authentication.name
 
         var transacaoCadastrada =
             transacaoService.buscarPorIdTransacaoEIdUsuario(transacao.idTransacao!!, transacao.idUsuario)
@@ -123,15 +122,16 @@ class TransacaoController {
         var casoNotFound = verificarSeFoiEncontradoERetornarNotFound(
             transacaoCadastrada,
             listOf(
-                ErroCampo("id_transacao", "Verifique se o id da transação está correto."),
-                ErroCampo("id_usuario", "Verifique se o id do usuário está correto.")
+                ErroCampo("id_transacao", "Verifique se o id da transação está correto.")
             ),
             "Nenhuma transação encontrada."
         )
         if (casoNotFound!=null)
-            return ResponseEntity.status(casoNotFound!!.status).body(casoNotFound)
+            return ResponseEntity.status(casoNotFound.status).body(casoNotFound)
 
-        var result = transacaoService.atualizarTransacao(transacao)
+        transacao.dataUltimaAtualizacao = LocalDate.now()
+
+        transacaoService.atualizarTransacao(transacao)
 
         return ResponseEntity.noContent().build()
     }
