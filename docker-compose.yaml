@@ -1,0 +1,25 @@
+services:
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
+    image: localstack/localstack
+    ports:
+      - "127.0.0.1:4566:4566"
+      - "127.0.0.1:4510-4559:4510-4559"
+    environment:
+      - DEBUG=${DEBUG:-0}
+    volumes:
+      - "./docker-compose-config/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"
+      - "./docker-compose-config/dynamodb_config.json:/docker-config/dynamodb_config.json"
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  api_transacoes:
+    depends_on:
+      - localstack
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - TZ=America/Sao_Paulo
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_REGION=sa-east-1

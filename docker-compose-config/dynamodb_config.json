@@ -1,0 +1,27 @@
+{
+  "TableName": "tb_transacoes",
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "id_transacao",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "id_usuario",
+      "AttributeType": "S"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "id_transacao",
+      "KeyType": "HASH"
+    },
+    {
+      "AttributeName": "id_usuario",
+      "KeyType": "RANGE"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 1,
+    "WriteCapacityUnits": 1
+  }
+}

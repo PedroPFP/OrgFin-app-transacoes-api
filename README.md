@@ -417,18 +417,18 @@ LCOM = 1 - ( (|A₁| / a + |A₂| / a + ... + |Aₘ| / a) / m )
       OrgFinAppTransacoesApiApplication.java NA
     
       config
+        security
+          CustomAuthenticationEntryPoint
+          SecurityConfiguration
         CustomTableNameResolver.java | m=1, a=2, a1 = 2 | = 0
     
       controller
-        TransacaoController.java | m=5, a=2, a1 = 1 a2...a5 = 2 | = 0.1 (Métodos privados não são adicionados na conta )
-    
         common
           GlobalExceptionHandler.java | m=1, a=0, ... | = 0 ( Desconsiderado por não ter atributos de classe)
+          TransacaoController.java | m=5, a=2, a1 = 1 a2...a5 = 2 | = 0.1 (Métodos privados não são adicionados na conta)
+
     
       model
-        TipoTransacao.java | m=0, a=1, ... | = 0 ( Desconsiderado por não ter métodos de classe)
-        Transacao.java | m=0, a=7, ... | = 0 ( Desconsiderado por não ter métodos de classe)
-    
         dto
           TransacaoDTO.java | m=0, a=7, ... | = 0 ( Desconsiderado por não ter métodos de classe)
     
@@ -438,6 +438,9 @@ LCOM = 1 - ( (|A₁| / a + |A₂| / a + ... + |Aₘ| / a) / m )
     
         mapper
           TransacaoMapper.java NA
+        
+        TipoTransacao.java | m=0, a=1, ... | = 0 ( Desconsiderado por não ter métodos de classe)
+        Transacao.java | m=0, a=7, ... | = 0 ( Desconsiderado por não ter métodos de classe)
     
       service
         TransacaoService.java | m=5, a=1, a1...a5=1 | = 0 
