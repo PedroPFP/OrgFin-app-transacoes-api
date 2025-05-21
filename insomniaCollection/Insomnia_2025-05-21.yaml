@@ -1,0 +1,227 @@
+type: collection.insomnia.rest/5.0
+name: OrgFinTransacoesApi
+meta:
+  id: wrk_1420c343279349f0bae5931e67d52fff
+  created: 1745716996729
+  modified: 1745716996729
+collection:
+  - url: " {{ _.environment }}/v1/transacao"
+    name: Salvar transação
+    meta:
+      id: req_27c2aa526d534ce3a65b40384d71627c
+      created: 1745717001525
+      modified: 1747836297538
+      isPrivate: false
+      sortKey: -1745717001526
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"tipo":"DESPESA",
+        	"nome":"a",
+        	"valor":2,
+        	"titulo":"weawewe",
+        	"descricao":"Moveis para casa",
+        	"tagGenero":"Casa"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_d10d23759ad3426da8cc4b4f35460ed6
+      - name: User-Agent
+        value: insomnia/11.0.2
+        id: pair_a155438d739641f186c3f69a5a438b32
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_bcfee109b22949419050dbede732b70b',
+        'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'never', 60 %}"
+      disabled: true
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.environment }}/v1/transacao/:idTransacao"
+    name: Buscar transação por id
+    meta:
+      id: req_64adf55bde254f32a06d7a95467d1385
+      created: 1745769089258
+      modified: 1747796799701
+      isPrivate: false
+      sortKey: -1745769089258
+    method: GET
+    parameters:
+      - id: pair_a9c2452adc7544b79ab9c117b47eac0d
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/11.0.2
+        id: pair_35bf91203f664568aa21b2de5d310509
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_bcfee109b22949419050dbede732b70b',
+        'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'never', 60 %}"
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: idTransacao
+  - url: "{{ _.environment }}/v1/transacao"
+    name: Buscar todas as transações por usuário
+    meta:
+      id: req_b7919adf9c17437b939d99672f8286df
+      created: 1745835213939
+      modified: 1747836295076
+      isPrivate: false
+      sortKey: -1745835213939
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.0.2
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_bcfee109b22949419050dbede732b70b',
+        'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'never', 60 %}"
+      disabled: true
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.environment }}/v1/transacao/:idTransacao"
+    name: Deletar transação por id
+    meta:
+      id: req_c58ac0e365cd460e9b6d0a40bacaaa8f
+      created: 1745836577955
+      modified: 1747739130977
+      isPrivate: false
+      sortKey: -1745743045392
+    method: DELETE
+    parameters:
+      - id: pair_a9c2452adc7544b79ab9c117b47eac0d
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/11.0.2
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_bcfee109b22949419050dbede732b70b',
+        'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'never', 60 %}"
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: idTransacao
+        value: "{% uuid 'v4' %}"
+  - url: "{{ _.environment }}/v1/transacao/:idTransacao"
+    name: AtualizarTransação
+    meta:
+      id: req_0abddd6f075a473c8a98dde68d931bee
+      created: 1745855922681
+      modified: 1747739180396
+      isPrivate: false
+      sortKey: -1745855922681
+    method: PUT
+    body:
+      mimeType: application/json
+      text: '{"tipo":"DESPESA","valor":400.0,"titulo":"Geladeira","descricao":"Moveis","tagGenero":"Casa",
+        "nome":"aaa"}'
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.0.2
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_bcfee109b22949419050dbede732b70b',
+        'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'never', 60 %}"
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: idTransacao
+        value: a0c34788-577f-4c3f-a621-2f58c413d152
+  - url: "{{ _.environment }}/actuator/health"
+    name: Health
+    meta:
+      id: req_3030f75b2ef548c5a4e7bc495f043220
+      created: 1747271576055
+      modified: 1747738336150
+      isPrivate: false
+      sortKey: -1747271576055
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.1.0
+        id: pair_54fa0ca96f064cb2831635a0180b3c80
+    authentication:
+      type: none
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_e358da71dc4aa816530fb709c93e5fe8a47a2a73
+    created: 1745716996737
+    modified: 1747836298347
+  cookies:
+    - key: XSRF-TOKEN
+      value: ca73f57f-26e9-483c-b001-0a54a97b6cd2
+      domain: api-transacoes.auth.sa-east-1.amazoncognito.com
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-05-18T15:05:12.606Z
+      lastAccessed: 2025-05-18T15:05:12.606Z
+      sameSite: lax
+      id: 9e8e161f-ad7b-47b2-a8e0-a02a242e2da6
+    - key: JSESSIONID
+      value: C2330212C63586E60147B21501077AA4
+      domain: localhost
+      path: /
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-05-20T00:03:48.101Z
+      lastAccessed: 2025-05-21T14:04:58.347Z
+      id: 7340e73c-09e9-47c8-b4ae-43823c617b47
+environments:
+  name: Base Environment
+  meta:
+    id: env_e358da71dc4aa816530fb709c93e5fe8a47a2a73
+    created: 1745716996731
+    modified: 1747738057641
+    isPrivate: false
+  data:
+    local: http://localhost:8080
+    Prod: https://l4makdt7l5.execute-api.sa-east-1.amazonaws.com/Prod

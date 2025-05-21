@@ -1,0 +1,15 @@
+type: environment.insomnia.rest/5.0
+name: Local
+meta:
+  id: wrk_ec3e0056ee15445e833f42950daaca6f
+  created: 1747738132047
+  modified: 1747738132047
+environments:
+  name: Base Environment
+  meta:
+    id: env_79ab252d631cd189a83630cce4bd478db9d0c92a
+    created: 1747738132052
+    modified: 1747738178595
+    isPrivate: false
+  data:
+    environment: http://localhost:8080
