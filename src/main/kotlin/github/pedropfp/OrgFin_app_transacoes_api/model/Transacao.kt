@@ -17,7 +17,7 @@ class Transacao() {
 
     @get:DynamoDbAttribute("id_usuario")
     @get:DynamoDbSortKey
-    lateinit var idUsuario: String;
+    var idUsuario: String = "";
 
     @get:DynamoDbAttribute("tp_transacao")
     lateinit var tipo: TipoTransacao;
@@ -38,5 +38,11 @@ class Transacao() {
 
     @get:DynamoDbAttribute("tag_genero_transacao")
     var tagGenero: String? = null
+
+    @get:DynamoDbAttribute("dt_criacao")
+    var dataCriacao: LocalDate = LocalDate.now()
+
+    @get:DynamoDbAttribute("dt_atualizacao")
+    var dataUltimaAtualizacao: LocalDate = LocalDate.now()
 
 }

@@ -1,0 +1,15 @@
+type: environment.insomnia.rest/5.0
+name: Prod
+meta:
+  id: wrk_d819e3dce6bb4c06bf355f456a79a053
+  created: 1747738196042
+  modified: 1747738196042
+environments:
+  name: Base Environment
+  meta:
+    id: env_dbaeffa9e3251b35b5dab1cecbf504c0d33c2393
+    created: 1747738196048
+    modified: 1747738205808
+    isPrivate: false
+  data:
+    environment: https://l4makdt7l5.execute-api.sa-east-1.amazonaws.com/Prod
