@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: "OrgFin-app-transacoes-api"
+  cloud:
+    aws:
+      endpoint: "http://localstack:4566"
+      credentials:
+        access-key: test
+        secret-key: test
+      region:
+        static: "sa-east-1"
+      dynamodb:
+        table-prefix: "tb_"
+        table-sufix: ""
+        endpoint: "http://localstack:4566"

@@ -9,9 +9,6 @@ import java.util.UUID
 
 data class TransacaoDTO(
     val idTransacao: UUID?,
-
-    @field:NotNull(message = "Campo obrigatório")
-    val idUsuario: String,
     @field:NotNull(message = "Campo obrigatório")
     val tipo: TipoTransacao,
     @field:NotNull(message = "Campo obrigatório")
